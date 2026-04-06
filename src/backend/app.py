@@ -14,7 +14,6 @@ CORS(app,
      supports_credentials=True)
 
 
-# ====================== Cohere ======================
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 if not COHERE_API_KEY:
@@ -22,7 +21,6 @@ if not COHERE_API_KEY:
 
 co = cohere.ClientV2(api_key=COHERE_API_KEY)
 
-# Animation mapping
 animation_map = {
     "stand": "idle", "idle": "idle",
     "walk": "walk", "running": "run", "run": "run",
@@ -33,7 +31,7 @@ animation_map = {
 
 @app.route("/command", methods=["POST", "OPTIONS"])
 def handle_command():
-    # Handle preflight OPTIONS request
+   
     if request.method == "OPTIONS":
         return jsonify({}), 200
 
@@ -51,7 +49,6 @@ def handle_command():
                 animation = anim
                 break
 
-        # Get explanation from Cohere
         prompt = f'User said: "{user_message}". The avatar is performing a "{animation}" action. Write a short, friendly, natural explanation (1-2 sentences).'
 
         response = co.chat(
