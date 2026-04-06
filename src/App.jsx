@@ -6,6 +6,7 @@ import Avatar from "./Avatar";
 export default function App() {
   const [animation, setAnimation] = useState("idle");
   const [explanation, setExplanation] = useState("");
+  const [listening, setListening] = useState(false);
 
   const handleCommand = async (text) => {
     if (!text?.trim()) return;
@@ -29,12 +30,35 @@ export default function App() {
     }
   };
 
+  const startListening = () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Voice not supported in this browser");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => setListening(true);
+    recognition.onend = () => setListening(false);
+
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      handleCommand(text);
+    };
+
+    recognition.start();
+  };
+
   return (
     <div style={styles.container}>
-      {/* LEFT PANEL - User Input */}
+      {/* LEFT PANEL */}
       <div style={styles.sidePanel}>
-        
-        
+        <h2 style={styles.panelTitle}>Command Input</h2>
+
         <input
           style={styles.input}
           type="text"
@@ -59,22 +83,47 @@ export default function App() {
         >
           Send
         </button>
+
+        {/* 🎤 MIC BUTTON */}
+        <button
+          style={{
+            ...styles.micButton,
+            background: listening
+              ? "linear-gradient(135deg, #ef4444, #f43f5e)"
+              : styles.micButton.background,
+            transform: listening ? "scale(1.1)" : "scale(1)",
+          }}
+          onClick={startListening}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="9" y="2" width="6" height="12" rx="3" />
+            <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
+            <line x1="12" y1="22" x2="12" y2="18" />
+          </svg>
+        </button>
       </div>
 
-      {/* CENTER - 3D Avatar */}
+      {/* CENTER - AVATAR */}
       <div style={styles.canvasContainer}>
-        <Canvas 
-          camera={{ position: [0, 1.6, 5.5], fov: 45 }}
-          style={{ background: "transparent" }}
-        >
+        <Canvas camera={{ position: [0, 1.6, 5.5], fov: 45 }}>
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 8, 5]} intensity={1.8} />
-          <pointLight position={[-5, 3, -5]} intensity={0.6} color="#a5b4fc" />
+          <pointLight position={[-5, 3, -5]} intensity={0.6} />
 
           <Avatar currentAnimation={animation} />
 
-          <OrbitControls 
-            target={[0, 0.9, 0]} 
+          <OrbitControls
+            target={[0, 0.9, 0]}
             enablePan={false}
             minDistance={2}
             maxDistance={8}
@@ -82,10 +131,10 @@ export default function App() {
         </Canvas>
       </div>
 
-      {/* RIGHT PANEL - AI Response */}
+      {/* RIGHT PANEL */}
       <div style={styles.sidePanel}>
         <h2 style={styles.panelTitle}>AI Response</h2>
-        
+
         <div style={styles.output}>
           {explanation || "Your AI response will appear here..."}
         </div>
@@ -101,7 +150,6 @@ const styles = {
     width: "100%",
     background: "#0f172a",
     color: "#e2e8f0",
-    overflow: "hidden",
   },
 
   sidePanel: {
@@ -115,50 +163,52 @@ const styles = {
   },
 
   panelTitle: {
-    margin: "0 0 8px 0",
     fontSize: "1.1rem",
     fontWeight: "600",
     color: "#c4d0ff",
-    letterSpacing: "0.5px",
   },
 
   input: {
-    padding: "14px 16px",
-    borderRadius: "12px",
+    padding: "14px",
+    borderRadius: "10px",
     border: "1px solid rgba(148, 163, 184, 0.2)",
     background: "#1e2937",
     color: "white",
-    fontSize: "1rem",
-    outline: "none",
-    transition: "all 0.2s",
   },
 
   button: {
-    padding: "14px 24px",
-    borderRadius: "12px",
+    padding: "12px",
+    borderRadius: "10px",
     border: "none",
-    background: "linear-gradient(90deg, #6366f1, #a855f7)",
+    background: "#6366f1",
     color: "white",
-    fontSize: "1rem",
-    fontWeight: "600",
     cursor: "pointer",
-    transition: "all 0.2s",
-    boxShadow: "0 4px 15px rgba(99, 102, 241, 0.3)",
+  },
+
+  micButton: {
+    width: "50px",
+    height: "50px",
+    borderRadius: "50%",
+    border: "none",
+    background: "linear-gradient(135deg, #6366f1, #a855f7)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    boxShadow: "0 6px 20px rgba(99, 102, 241, 0.4)",
+    transition: "all 0.2s ease",
   },
 
   canvasContainer: {
     flex: 1,
-    position: "relative",
-    background: "radial-gradient(circle at center, #1e2937 0%, #0f172a 70%)",
+    background: "radial-gradient(circle, #1e2937, #0f172a)",
   },
 
   output: {
     padding: "20px",
-    borderRadius: "12px",
+    borderRadius: "10px",
     background: "#1e2937",
     minHeight: "180px",
-    lineHeight: "1.6",
-    border: "1px solid rgba(148, 163, 184, 0.1)",
-    whiteSpace: "pre-wrap",
   },
 };
