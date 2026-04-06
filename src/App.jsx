@@ -14,7 +14,7 @@ export default function App() {
     setExplanation("Thinking...");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/command", {
+      const res = await fetch("https://ai-avatar-assistant.onrender.com/command", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
