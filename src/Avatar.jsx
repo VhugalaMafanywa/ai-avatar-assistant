@@ -8,7 +8,6 @@ const Avatar = ({ currentAnimation = "idle" }) => {
 
   const { scene } = useGLTF("/models/avatar.glb");
 
-  // Load animations
   const idleGLB = useGLTF("/animations/idle.glb");
   const walkGLB = useGLTF("/animations/walking.glb");
   const pointGLB = useGLTF("/animations/pointing.glb");
@@ -38,7 +37,6 @@ const Avatar = ({ currentAnimation = "idle" }) => {
 
   const { actions, mixer } = useAnimations(clips, group);
 
-  // Position & Scale
   useEffect(() => {
     if (!scene) return;
 
@@ -47,7 +45,7 @@ const Avatar = ({ currentAnimation = "idle" }) => {
     const center = box.getCenter(new THREE.Vector3());
 
     scene.position.set(-center.x, -center.y + size.y * 0.5, -center.z);
-    const scale = 2.4 / size.y;           // Bigger = more visible motion
+    const scale = 2.4 / size.y;           
     scene.scale.set(scale, scale, scale);
 
     scene.traverse((child) => {
@@ -58,23 +56,21 @@ const Avatar = ({ currentAnimation = "idle" }) => {
     });
   }, [scene]);
 
-  // 🔥 STRONG ANIMATION PLAY
   useEffect(() => {
     if (!actions) return;
 
-    // Stop everything
     Object.values(actions).forEach((a) => a?.stop());
 
     const action = actions[currentAnimation] || actions.idle;
 
     if (action) {
       action.reset()
-            .setEffectiveWeight(1.0)      // Full control
+            .setEffectiveWeight(1.0)      
             .setEffectiveTimeScale(1.0)
             .fadeIn(0.2)
             .play();
 
-      console.log(`🎬 Playing: ${currentAnimation} (Weight: 1.0)`);
+      console.log(` Playing: ${currentAnimation} (Weight: 1.0)`);
     }
   }, [currentAnimation, actions]);
 
@@ -83,7 +79,6 @@ const Avatar = ({ currentAnimation = "idle" }) => {
   return <primitive ref={group} object={scene} dispose={null} />;
 };
 
-// Preload only the main model to reduce memory pressure
 useGLTF.preload("/models/avatar.glb");
 
 export default Avatar;
