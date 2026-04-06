@@ -1,12 +1,14 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Avatar from "./Avatar";
 
 export default function App() {
   const [animation, setAnimation] = useState("idle");
   const [explanation, setExplanation] = useState("");
   const [listening, setListening] = useState(false);
+
+  const recognitionRef = useRef(null);
 
   const handleCommand = async (text) => {
     if (!text?.trim()) return;
@@ -30,27 +32,34 @@ export default function App() {
     }
   };
 
-  const startListening = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      alert("Voice not supported in this browser");
+  const toggleListening = () => {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      alert("Speech recognition not supported in this browser");
       return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
+    if (!recognitionRef.current) {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    recognition.onstart = () => setListening(true);
-    recognition.onend = () => setListening(false);
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.continuous = false;
+      recognition.interimResults = false;
 
-    recognition.onresult = (event) => {
-      const text = event.results[0][0].transcript;
-      handleCommand(text);
-    };
+      recognition.onstart = () => setListening(true);
+      recognition.onend = () => setListening(false);
 
-    recognition.start();
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        handleCommand(text);
+      };
+
+      recognitionRef.current = recognition;
+    }
+
+    if (listening) recognitionRef.current.stop();
+    else recognitionRef.current.start();
   };
 
   return (
@@ -84,7 +93,6 @@ export default function App() {
           Send
         </button>
 
-        {/* 🎤 MIC BUTTON */}
         <button
           style={{
             ...styles.micButton,
@@ -93,7 +101,7 @@ export default function App() {
               : styles.micButton.background,
             transform: listening ? "scale(1.1)" : "scale(1)",
           }}
-          onClick={startListening}
+          onClick={toggleListening}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -146,14 +154,16 @@ export default function App() {
 const styles = {
   container: {
     display: "flex",
+    flexDirection: "row",
     height: "100vh",
     width: "100%",
     background: "#0f172a",
     color: "#e2e8f0",
+    overflow: "hidden",
   },
 
   sidePanel: {
-    width: "280px",
+    flex: "0 0 280px",
     padding: "32px 24px",
     display: "flex",
     flexDirection: "column",
@@ -202,6 +212,8 @@ const styles = {
 
   canvasContainer: {
     flex: 1,
+    position: "relative",
+    minWidth: 0,
     background: "radial-gradient(circle, #1e2937, #0f172a)",
   },
 
@@ -210,5 +222,18 @@ const styles = {
     borderRadius: "10px",
     background: "#1e2937",
     minHeight: "180px",
+    overflowY: "auto",
+    wordWrap: "break-word",
+  },
+
+  "@media (max-width: 900px)": {
+    container: { flexDirection: "column" },
+    sidePanel: { width: "100%", flex: "none", borderRight: "none", borderBottom: "1px solid rgba(148,163,184,0.1)" },
+    canvasContainer: { width: "100%", height: "50vh" },
+  },
+
+  "@media (max-width: 500px)": {
+    canvasContainer: { height: "40vh" },
+    sidePanel: { padding: "16px" },
   },
 };
