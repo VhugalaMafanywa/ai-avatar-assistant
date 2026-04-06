@@ -1,4 +1,5 @@
-fastapi
+gtts
+gunicorn
 uvicorn[standard]
 cohere
 python-dotenv
