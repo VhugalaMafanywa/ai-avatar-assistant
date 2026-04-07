@@ -15,7 +15,7 @@ An interactive **3D AI-powered avatar** that responds to text and voice commands
 
 ---
 
-## 🧩 Tech Stack
+##  Tech Stack
 
 ### Frontend
 
@@ -32,46 +32,11 @@ An interactive **3D AI-powered avatar** that responds to text and voice commands
 
 ---
 
-## 📂 Project Structure
-
-```
-project-root/
-│
-├── src
-│   
-│   │   ├── App.jsx
-│   │   ├── Avatar.jsx
-        ├── backend/
-│               ├── app.py
-│               ├── .env
-│               └── ...
-│   │  
-│   └── package.json
-│
-├── 
-│
-├── public/
-│   ├── models/
-│   │   └── avatar.glb
-│   └── animations/
-│       ├── idle.glb
-│       ├── walking.glb
-│       ├── run.glb
-│       ├── pointing.glb
-│       ├── waving.glb
-│       └── clapping.glb
-│
-└── README.md
-```
-
----
-
-
 
 
 ---
 
-## 🔧 Backend Setup (Flask)
+##  Backend Setup (Flask)
 
 ```bash
 cd backend
@@ -93,12 +58,12 @@ python app.py
 Server runs on:
 
 ```
-http://127.0.0.1:8000
+(https://ai-avatar-assistant.onrender.com)
 ```
 
 ---
 
-## 💻 Frontend Setup (React)
+##  Frontend Setup (React)
 
 ```bash
 cd frontend
@@ -109,12 +74,12 @@ npm run dev
 Frontend runs on:
 
 ```
-http://localhost:5173
+(https://ai-avatar-assistant-sepia.vercel.app/)
 ```
 
 ---
 
-## 🎮 Usage
+##  Usage
 
 ### Text Commands
 
@@ -128,7 +93,7 @@ Type and press Enter:
 
 ---
 
-### 🎤 Voice Commands
+###  Voice Commands
 
 Click the **🎤 Speak** button and say:
 
@@ -146,7 +111,7 @@ The avatar will:
 
 ---
 
-## 🔁 How It Works
+##  How It Works
 
 ```
 🎤 Voice / ⌨️ Text Input
@@ -164,7 +129,7 @@ Animation response
 
 ---
 
-## ⚠️ Notes
+##  Notes
 
 * Voice works best in **Chrome / Edge**
 * Requires:
@@ -174,7 +139,7 @@ Animation response
 
 ---
 
-## 🔐 Security
+##  Security
 
 Make sure `.env` is ignored:
 
@@ -186,18 +151,25 @@ __pycache__/
 
 ---
 
-## 🚀 Future Improvements
-
-* 🗣️ Text-to-Speech (avatar talks back)
-* 🎭 Emotion-based animations
-* 🎧 Continuous listening mode (like Alexa)
-* 👥 Multi-avatar interaction
+##  APIs & Tools Used
+- Cohere API – conversational AI
+- Web Speech API – speech input
+- Three.js – 3D avatar rendering
+- GLB models – 3D avatar assets
 
 ---
+##  Limitations
+- Avatar actions are triggered but do not always mimic accurately
+- Animation mapping from AI responses is basic
+- No lip-syncing yet
+- Latency in speech input processing and AI response
 
-## 👨‍💻 Author
-
-Built by **Vhugala Mafanywa**
+---
+##  Next Steps
+- Improve animation accuracy and synchronization
+- Add lip-syncing and emotion mapping
+- Implement real-time voice streaming
+- Introduce memory/personalized AI responses
 
 ---
 
