@@ -57,7 +57,6 @@ export default function App() {
     <div style={styles.container}>
       {/* LEFT PANEL */}
       <div style={styles.sidePanel}>
-        <h2 style={styles.panelTitle}>Command Input</h2>
 
         <input
           style={styles.input}
