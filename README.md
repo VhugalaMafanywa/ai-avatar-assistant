@@ -1,6 +1,8 @@
 # 🤖 AI Avatar with Voice Control
 
 An interactive **3D AI-powered avatar** that responds to text and voice commands, performs animations, and explains its actions using AI.
+- <img width="1121" height="594" alt="image" src="https://github.com/user-attachments/assets/0f23b40f-18a8-4b22-80c4-bffd7b7cf539" />
+
 
 ---
 
